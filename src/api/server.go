@@ -1,11 +1,8 @@
 package api
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-
-	"github.com/cosmos/cosmos-sdk/x/bank"
 )
 
 type Server struct {
@@ -17,8 +14,6 @@ func NewServer() *Server {
 	server := &Server{}
 	router := http.NewServeMux()
 	router.HandleFunc("/healthcheck", server.HealthCheckHandler)
-	bankModule := bank.AppModuleBasic{}
-	fmt.Println(bankModule)
 	router.HandleFunc("/query/bank/total", server.QueryBankTotalHandler)
 	server.router = router
 	return server

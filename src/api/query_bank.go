@@ -1,25 +1,32 @@
 package api
 
 import (
-	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/x/bank/types"
+	"github.com/cosmos/cosmos-sdk/x/bank/client/cli"
 )
 
 // QueryBankTotalHandler return back total supply value from query
 func (server *Server) QueryBankTotalHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	clientCtx, err := client.GetClientQueryContext(nil)
-	clientCtx.Output = w
-	clientCtx.WithNodeURI("https://fx-json.functionx.io:26657")
-	if err != nil {
-		w.WriteHeader(http.StatusBadGateway)
-		json.NewEncoder(w).Encode(map[string]string{"err": err.Error()})
-		return
+	cmd := cli.GetCmdQueryTotalSupply()
+	cmd.Flags().Set("node", "https://fx-json.functionx.io:26657")
+	fmt.Println(cmd.Context())
+	if v := cmd.Context().Value(client.ClientContextKey); v != nil {
+		clientCtxPtr := v.(*client.Context)
+		fmt.Println(clientCtxPtr)
 	}
-	queryClient := types.NewQueryClient(clientCtx)
-	res, err := queryClient.TotalSupply(nil, &types.QueryTotalSupplyRequest{})
-	clientCtx.PrintProto(res)
+	fmt.Println(cmd.Context().Value(client.ClientContextKey))
+	// clientCtx, err := client.GetClientQueryContext(cmd)
+	// clientCtx.Output = w
+	// clientCtx.WithNodeURI("https://fx-json.functionx.io:26657")
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusBadGateway)
+	// 	json.NewEncoder(w).Encode(map[string]string{"err": err.Error()})
+	// 	return
+	// }
+	// queryClient := types.NewQueryClient(clientCtx)
+	// res, err := queryClient.TotalSupply(nil, &types.QueryTotalSupplyRequest{})
+	// clientCtx.PrintProto(res)
 }
