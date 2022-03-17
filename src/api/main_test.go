@@ -1,12 +1,13 @@
 package api
 
 import (
-	"net/http"
 	"testing"
+
+	"github.com/gorilla/mux"
 )
 
 var (
-	testRouter *http.ServeMux
+	testRouter *mux.Router
 )
 
 func TestMain(m *testing.M) {
