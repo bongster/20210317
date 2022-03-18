@@ -1,9 +1,14 @@
 .PHONY: all
 
+check-air:
+ifeq (,$(wildcard ./bin/air))
+	curl -sSfL "https://raw.githubusercontent.com/cosmtrek/air/master/install.sh" | sh -s
+endif
+
 start:
 	@go run src/main.go
 
-dev:
+dev: check-air
 	./bin/air
 
 go-build:
